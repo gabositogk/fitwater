@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FitWater 💧</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #dff6ff, #f4fbff);
+            color: #17324d;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #0794d1;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 16px;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 25px 15px;
+        }
+
+        /* AGUA */
+        .water-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .water-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #087eb5;
+        }
+
+        .water-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        /* BOTELLA */
+        .bottle {
+            position: relative;
+            width: 140px;
+            height: 330px;
+            border: 6px solid #147db0;
+            border-radius: 30px 30px 35px 35px;
+            background: rgba(220, 245, 255, 0.7);
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.08);
+        }
+
+        .bottle::before {
+            content: "";
+            position: absolute;
+            width: 65px;
+            height: 45px;
+            left: 31px;
+            top: -48px;
+            border: 6px solid #147db0;
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+            background: #dff6ff;
+        }
+
+        .bottle-cap {
+            position: absolute;
+            width: 75px;
+            height: 20px;
+            background: #147db0;
+            top: -6px;
+            left: 26px;
+            border-radius: 5px;
+            z-index: 5;
+        }
+
+        .water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: #19aee8;
+            /* Sin animación */
+            transition: none;
+        }
+
+        .water-shine {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            width: 10px;
+            height: 240px;
+            background: rgba(255,255,255,0.35);
+            border-radius: 20px;
+            z-index: 2;
+        }
+
+        .water-info {
+            text-align: center;
+            min-width: 260px;
+        }
+
+        .water-amount {
+            font-size: 38px;
+            font-weight: bold;
+            color: #078ac6;
+            margin-bottom: 5px;
+        }
+
+        .water-goal {
+            color: #687b8d;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 18px;
+            background: #e4edf2;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: #079edc;
+            transition: none;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            background: #078fca;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #0575a8;
+        }
+
+        .minus {
+            background: #e65d5d;
+        }
+
+        .minus:hover {
+            background: #c74747;
+        }
+
+        .reset {
+            background: #667788;
+        }
+
+        .reset:hover {
+            background: #4e5d6b;
+        }
+
+        /* PESO */
+        .weight-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .weight-section h2 {
+            color: #087eb5;
+            margin-bottom: 15px;
+        }
+
+        .weight-input {
+            width: 180px;
+            padding: 12px;
+            border: 2px solid #c8dce7;
+            border-radius: 10px;
+            font-size: 17px;
+            text-align: center;
+            outline: none;
+        }
+
+        .weight-input:focus {
+            border-color: #079edc;
+        }
+
+        /* ACTIVIDADES */
+        .activities-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .activities-section h2 {
+            color: #087eb5;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+        }
+
+        .activity {
+            border: 2px solid #e2edf2;
+            border-radius: 15px;
+            padding: 18px;
+            background: #fbfeff;
+        }
+
+        .activity h3 {
+            margin-bottom: 8px;
+            color: #087eb5;
+        }
+
+        .activity p {
+            color: #657889;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .activity-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .activity input {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #c7d8e1;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .activity button {
+            white-space: nowrap;
+            padding: 9px 12px;
+        }
+
+        /* RESUMEN */
+        .summary {
+            margin-top: 25px;
+            background: #063f5d;
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .summary-box {
+            min-width: 180px;
+        }
+
+        .summary-number {
+            display: block;
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        footer {
+            text-align: center;
+            color: #607789;
+            padding: 25px 10px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 27px;
+            }
+
+            .water-content {
+                gap: 30px;
+            }
+
+            .bottle {
+                width: 120px;
+                height: 290px;
+            }
+
+            .water-amount {
+                font-size: 32px;
+            }
+
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>💧 FitWater 🏃</h1>
+    <p>Control tu hidratación y registra tu actividad física</p>
+</header>
+
+<main>
+
+    <!-- SECCIÓN DE AGUA -->
+    <section class="water-section">
+
+        <h2>💧 Mi agua de hoy</h2>
+
+        <div class="water-content">
+
+            <div class="bottle">
+
+                <div class="bottle-cap"></div>
+
+                <div class="water" id="water"></div>
+
+                <div class="water-shine"></div>
+
+            </div>
+
+            <div class="water-info">
+
+                <div class="water-amount">
+                    <span id="waterAmount">0</span> ml
+                </div>
+
+                <div class="water-goal">
+                    Meta diaria: 2000 ml
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress" id="waterProgress"></div>
+                </div>
+
+                <div class="buttons">
+                    <button onclick="addWater(250)">+250 ml</button>
+                    <button onclick="addWater(500)">+500 ml</button>
+                    <button class="minus" onclick="addWater(-250)">-250 ml</button>
+                    <button class="reset" onclick="resetWater()">Reiniciar</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- PESO -->
+    <section class="weight-section">
+
+        <h2>⚖️ Tu peso</h2>
+
+        <p style="margin-bottom:15px;">
+            Introduce tu peso para calcular una estimación de calorías.
+        </p>
+
+        <input
+            type="number"
+            id="weight"
+            class="weight-input"
+            placeholder="Peso en kg"
+            min="1"
+            max="500"
+            value="70"
+        >
+
+    </section>
+
+    <!-- ACTIVIDADES -->
+    <section class="activities-section">
+
+        <h2>🔥 Actividades físicas</h2>
+
+        <div class="activity-grid">
+
+            <div class="activity">
+                <h3>🚶 Caminar</h3>
+                <p>Calorías estimadas por minuto.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="walk" placeholder="Minutos" min="1">
+                    <button onclick="calculate('walk', 0.035)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🏃 Correr</h3>
+                <p>Calorías estimadas por minuto.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="run" placeholder="Minutos" min="1">
+                    <button onclick="calculate('run', 0.12)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🚴 Bicicleta</h3>
+                <p>Calorías estimadas por minuto.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="bike" placeholder="Minutos" min="1">
+                    <button onclick="calculate('bike', 0.085)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🪢 Saltar cuerda</h3>
+                <p>Calorías estimadas por minuto.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="rope" placeholder="Minutos" min="1">
+                    <button onclick="calculate('rope', 0.13)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🏋️ Sentadillas</h3>
+                <p>Calorías estimadas por repetición.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="squats" placeholder="Repeticiones" min="1">
+                    <button onclick="calculate('squats', 0.32)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>💪 Flexiones</h3>
+                <p>Calorías estimadas por repetición.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="pushups" placeholder="Repeticiones" min="1">
+                    <button onclick="calculate('pushups', 0.29)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🔥 Abdominales</h3>
+                <p>Calorías estimadas por repetición.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="abs" placeholder="Repeticiones" min="1">
+                    <button onclick="calculate('abs', 0.20)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>⭐ Jumping Jacks</h3>
+                <p>Calorías estimadas por repetición.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="jacks" placeholder="Repeticiones" min="1">
+                    <button onclick="calculate('jacks', 0.20)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🔥 Burpees</h3>
+                <p>Calorías estimadas por repetición.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="burpees" placeholder="Repeticiones" min="1">
+                    <button onclick="calculate('burpees', 0.60)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🧘 Plancha</h3>
+                <p>Calorías estimadas por minuto.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="plank" placeholder="Minutos" min="1">
+                    <button onclick="calculate('plank', 0.065)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🏊 Natación</h3>
+                <p>Calorías estimadas por minuto.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="swim" placeholder="Minutos" min="1">
+                    <button onclick="calculate('swim', 0.10)">Calcular</button>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>🕺 Bailar</h3>
+                <p>Calorías estimadas por minuto.</p>
+
+                <div class="activity-controls">
+                    <input type="number" id="dance" placeholder="Minutos" min="1">
+                    <button onclick="calculate('dance', 0.07)">Calcular</button>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- RESUMEN -->
+    <section class="summary">
+
+        <div class="summary-box">
+            💧 Agua
+            <span class="summary-number">
+                <span id="summaryWater">0</span> ml
+            </span>
+        </div>
+
+        <div class="summary-box">
+            🔥 Calorías
+            <span class="summary-number">
+                <span id="calories">0</span> kcal
+            </span>
+        </div>
+
+        <div class="summary-box">
+            🏆 Actividades
+            <span class="summary-number">
+                <span id="activities">0</span>
+            </span>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    Las calorías son estimaciones y pueden variar según la persona y la intensidad del ejercicio.
+</footer>
+
+
+<script>
+
+    // ==========================
+    // AGUA
+    // ==========================
+
+    let waterAmount = 0;
+
+    const waterGoal = 2000;
+
+    function addWater(amount) {
+
+        waterAmount += amount;
+
+        if (waterAmount < 0) {
+            waterAmount = 0;
+        }
+
+        if (waterAmount > waterGoal) {
+            waterAmount = waterGoal;
+        }
+
+        updateWater();
+
+    }
+
+    function resetWater() {
+
+        waterAmount = 0;
+
+        updateWater();
+
+    }
+
+    function updateWater() {
+
+        document.getElementById("waterAmount").textContent = waterAmount;
+
+        document.getElementById("summaryWater").textContent = waterAmount;
+
+        let percentage = (waterAmount / waterGoal) * 100;
+
+        if (percentage > 100) {
+            percentage = 100;
+        }
+
+        document.getElementById("water").style.height = percentage + "%";
+
+        document.getElementById("waterProgress").style.width = percentage + "%";
+
+    }
+
+
+    // ==========================
+    // CALORÍAS
+    // ==========================
+
+    let totalCalories = 0;
+
+    let totalActivities = 0;
+
+    function calculate(inputId, factor) {
+
+        const input = document.getElementById(inputId);
+
+        const amount = Number(input.value);
+
+        const weight = Number(document.getElementById("weight").value);
+
+        if (amount <= 0) {
+
+            alert("Introduce una cantidad válida.");
+
+            return;
+
+        }
+
+        if (weight <= 0) {
+
+            alert("Introduce tu peso en kg.");
+
+            return;
+
+        }
+
+        /*
+            El factor es una aproximación.
+            Se multiplica por el peso y la cantidad.
+        */
+
+        const calories = amount * weight * factor;
+
+        totalCalories += calories;
+
+        totalActivities++;
+
+        document.getElementById("calories").textContent =
+            Math.round(totalCalories);
+
+        document.getElementById("activities").textContent =
+            totalActivities;
+
+        input.value = "";
+
+    }
+
+
+    // ==========================
+    // GUARDAR DATOS
+    // ==========================
+
+    function saveData() {
+
+        localStorage.setItem(
+            "fitwater_water",
+            waterAmount
+        );
+
+        localStorage.setItem(
+            "fitwater_calories",
+            totalCalories
+        );
+
+        localStorage.setItem(
+            "fitwater_activities",
+            totalActivities
+        );
+
+        localStorage.setItem(
+            "fitwater_weight",
+            document.getElementById("weight").value
+        );
+
+    }
+
+
+    // Guardar automáticamente
+    setInterval(saveData, 1000);
+
+
+    // ==========================
+    // CARGAR DATOS
+    // ==========================
+
+    window.onload = function() {
+
+        const savedWater =
+            localStorage.getItem("fitwater_water");
+
+        const savedCalories =
+            localStorage.getItem("fitwater_calories");
+
+        const savedActivities =
+            localStorage.getItem("fitwater_activities");
+
+        const savedWeight =
+            localStorage.getItem("fitwater_weight");
+
+        if (savedWater !== null) {
+
+            waterAmount = Number(savedWater);
+
+            updateWater();
+
+        }
+
+        if (savedCalories !== null) {
+
+            totalCalories = Number(savedCalories);
+
+            document.getElementById("calories").textContent =
+                Math.round(totalCalories);
+
+        }
+
+        if (savedActivities !== null) {
+
+            totalActivities = Number(savedActivities);
+
+            document.getElementById("activities").textContent =
+                totalActivities;
+
+        }
+
+        if (savedWeight !== null) {
+
+            document.getElementById("weight").value =
+                savedWeight;
+
+        }
+
+    };
+
+</script>
+
+</body>
+</html>
