@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitWater 💧 - Información y Calculadora</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #dff6ff, #f4fbff);
+            color: #17324d;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #0794d1;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 25px 15px;
+        }
+
+        .water-section, .calculator-section, .weight-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #087eb5;
+        }
+
+        .container-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .quick-ml-section {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .quick-ml-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #087eb5;
+            margin-bottom: 8px;
+        }
+
+        .water-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .stage {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 400px;
+            justify-content: flex-end;
+        }
+
+        .puddle {
+            width: 0px;
+            height: 12px;
+            background: rgba(25, 174, 232, 0.8);
+            border-radius: 50%;
+            transition: width 0.4s ease;
+            margin-top: 10px;
+        }
+
+        .container-box {
+            position: relative;
+            transition: all 0.3s ease;
+            background: rgba(220, 245, 255, 0.7);
+            overflow: hidden;
+        }
+
+        .type-bottle {
+            width: 180px;
+            height: 340px;
+            border: 7px solid #147db0;
+            border-radius: 40px 40px 45px 45px;
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.08);
+        }
+
+        .type-bottle::before {
+            content: "";
+            position: absolute;
+            width: 80px;
+            height: 35px;
+            left: 43px;
+            top: -38px;
+            border: 7px solid #147db0;
+            border-bottom: none;
+            border-radius: 14px 14px 0 0;
+            background: #dff6ff;
+        }
+
+        .type-glass {
+            width: 150px;
+            height: 220px;
+            border: 6px solid #147db0;
+            border-top: none;
+            border-radius: 10px 10px 30px 30px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.08);
+        }
+
+        .type-glass::before { content: none; }
+
+        .water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: #19aee8;
+            transition: height 0.3s ease;
+        }
+
+        .water-info {
+            text-align: center;
+            min-width: 280px;
+        }
+
+        .water-amount {
+            font-size: 38px;
+            font-weight: bold;
+            color: #078ac6;
+            margin-bottom: 5px;
+        }
+
+        .water-goal {
+            color: #687b8d;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 18px;
+            background: #e4edf2;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: #079edc;
+            transition: width 0.3s ease;
+        }
+
+        .custom-box {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px dashed #b1dbeb;
+            margin-bottom: 15px;
+        }
+
+        .custom-box label {
+            display: block;
+            font-size: 15px;
+            font-weight: bold;
+            color: #087eb5;
+            margin-bottom: 10px;
+        }
+
+        .custom-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 2px solid #c8dce7;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input[type="number"] {
+            width: 120px;
+            text-align: center;
+        }
+
+        select {
+            background: white;
+            color: #17324d;
+            cursor: pointer;
+        }
+
+        button {
+            border: none;
+            background: #078fca;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        button:hover { background: #0575a8; }
+        .btn-add { background: #079edc; }
+        .btn-subtract { background: #e65d5d; }
+        .btn-subtract:hover { background: #c74747; }
+        .reset { background: #667788; }
+        .reset:hover { background: #4e5d6b; }
+
+        .weight-section { text-align: center; }
+
+        .summary {
+            margin-top: 25px;
+            background: #063f5d;
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .summary-number { display: block; font-size: 30px; font-weight: bold; }
+
+        footer {
+            text-align: center;
+            color: #607789;
+            padding: 25px 10px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>💧 FitWater 🏃</h1>
+    <p>Información e indicadores de hidratación y actividad física</p>
+</header>
+
+<main>
+
+    <!-- AGUA -->
+    <section class="water-section">
+        <h2 class="section-title">📊 Información y Capacidad del Recipiente de Agua</h2>
+
+        <!-- OPCIONES PARA AÑADIR ML RÁPIDO -->
+        <div class="quick-ml-section">
+            <p class="quick-ml-title">⚡ Añadir agua rápidamente:</p>
+            <div class="container-selector">
+                <button class="btn-add" onclick="addFixedWater(250)">+250 ml</button>
+                <button class="btn-add" onclick="addFixedWater(500)">+500 ml</button>
+                <button class="btn-add" onclick="addFixedWater(1000)">+1000 ml</button>
+            </div>
+        </div>
+
+        <!-- SELECCIÓN DE CONTENEDOR -->
+        <div class="container-selector">
+            <button onclick="setContainer('glass')">🥛 Vaso (250 ml)</button>
+            <button onclick="setContainer('bottle')">🍼 Botella (2000 ml)</button>
+        </div>
+
+        <div class="water-content">
+            <div class="stage">
+                <div id="container" class="container-box type-bottle">
+                    <div class="water" id="water"></div>
+                </div>
+                <div class="puddle" id="puddle"></div>
+            </div>
+
+            <div class="water-info">
+                <div class="water-amount">
+                    <span id="waterAmount">0</span> ml
+                </div>
+
+                <div class="water-goal" id="goalText">
+                    Capacidad máxima del recipiente: 2000 ml
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress" id="waterProgress"></div>
+                </div>
+
+                <div class="custom-box">
+                    <label for="customWaterInput">Agregar / Consultar ml:</label>
+                    <div class="custom-inputs">
+                        <input type="number" id="customWaterInput" placeholder="Ej. 200" min="1">
+                        <button class="btn-add" onclick="addCustomWater(1)">+ Sumar</button>
+                        <button class="btn-subtract" onclick="addCustomWater(-1)">- Restar</button>
+                    </div>
+                </div>
+
+                <button class="reset" onclick="resetWater()">Reiniciar Agua</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PESO REFERENCIA -->
+    <section class="weight-section">
+        <h2 class="section-title">⚖️ Peso Corporal de Referencia</h2>
+        <input type="number" id="weight" value="70" min="1" max="500"> kg
+    </section>
+
+    <!-- CALCULADORA DE ACTIVIDAD -->
+    <section class="calculator-section">
+        <h2 class="section-title">🏃 Calculadora de Actividad Física</h2>
+
+        <div class="custom-box" style="text-align: center;">
+            <label>Selecciona una actividad e ingresa el tiempo o repeticiones:</label>
+            <div class="custom-inputs">
+                <select id="activitySelect" onchange="updateUnitLabel()">
+                    <option value="0.035" data-unit="minutos">🚶 Caminar</option>
+                    <option value="0.12" data-unit="minutos">🏃 Correr</option>
+                    <option value="0.085" data-unit="minutos">🚴 Bicicleta</option>
+                    <option value="0.13" data-unit="minutos">🪢 Cuerda</option>
+                    <option value="0.32" data-unit="repeticiones">🏋️ Sentadillas</option>
+                    <option value="0.29" data-unit="repeticiones">💪 Flexiones</option>
+                    <option value="0.20" data-unit="repeticiones">🔥 Abdominales</option>
+                    <option value="0.20" data-unit="repeticiones">⭐ Jumping Jacks</option>
+                    <option value="0.60" data-unit="repeticiones">🔥 Burpees</option>
+                    <option value="0.065" data-unit="minutos">🧘 Plancha</option>
+                    <option value="0.10" data-unit="minutos">🏊 Natación</option>
+                    <option value="0.07" data-unit="minutos">🕺 Bailar</option>
+                    <option value="0.09" data-unit="minutos">🎾 Tenis</option>
+                    <option value="0.10" data-unit="minutos">🏀 Baloncesto</option>
+                    <option value="0.11" data-unit="minutos">⚽ Fútbol</option>
+                    <option value="0.14" data-unit="minutos">🥊 Boxeo</option>
+                    <option value="0.13" data-unit="minutos">🧗 Escalada</option>
+                    <option value="0.08" data-unit="minutos">🛼 Patinaje</option>
+                    <option value="0.04" data-unit="minutos">🧘‍♀️ Yoga</option>
+                    <option value="0.06" data-unit="minutos">🏐 Voleibol</option>
+                    <option value="0.12" data-unit="minutos">🥋 Artes Marciales</option>
+                    <option value="0.30" data-unit="repeticiones">🎽 Zancadas</option>
+                    <option value="0.09" data-unit="minutos">⛰️ Senderismo</option>
+                    <option value="0.07" data-unit="minutos">🏸 Bádminton</option>
+                    <option value="0.03" data-unit="minutos">🧹 Limpiar casa</option>
+                    <option value="0.11" data-unit="minutos">🪵 Remar</option>
+                    <option value="0.15" data-unit="minutos">🤸 Crossfit</option>
+                    <option value="0.13" data-unit="minutos">🪜 Subir Escalas</option>
+                    <option value="0.05" data-unit="minutos">🏓 Ping Pong</option>
+                    <option value="0.06" data-unit="minutos">🛹 Skate</option>
+                </select>
+
+                <input type="number" id="activityAmount" placeholder="Cant." min="1">
+                <span id="unitLabel" style="align-self: center; font-weight: bold; color: #087eb5;">minutos</span>
+
+                <button class="btn-add" onclick="calculateSelected()">Calcular</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 15px;">
+            <button class="reset" onclick="resetCalories()">Reiniciar Calorías y Actividades</button>
+        </div>
+    </section>
+
+    <!-- RESUMEN INFORMATIVO -->
+    <section class="summary">
+        <div class="summary-box">💧 Agua Total<span class="summary-number"><span id="summaryWater">0</span> ml</span></div>
+        <div class="summary-box">🔥 Calorías Calculadas<span class="summary-number"><span id="calories">0</span> kcal</span></div>
+        <div class="summary-box">🏆 Registro de Consultas<span class="summary-number"><span id="activities">0</span></span></div>
+    </section>
+
+</main>
+
+<footer>FitWater - Plataforma de consulta e información sobre agua y ejercicio</footer>
+
+<script>
+    let waterAmount = 0;
+    let waterGoal = 2000;
+
+    function setContainer(type) {
+        const container = document.getElementById("container");
+        if (type === 'glass') {
+            waterGoal = 250;
+            container.className = "container-box type-glass";
+        } else {
+            waterGoal = 2000;
+            container.className = "container-box type-bottle";
+        }
+        document.getElementById("goalText").textContent = `Capacidad máxima del recipiente: ${waterGoal} ml`;
+        updateWater();
+    }
+
+    function addFixedWater(amount) {
+        waterAmount += amount;
+        updateWater();
+    }
+
+    function addCustomWater(dir) {
+        const input = document.getElementById("customWaterInput");
+        const val = Number(input.value);
+        if (val > 0) {
+            waterAmount += (val * dir);
+            if (waterAmount < 0) waterAmount = 0;
+            input.value = "";
+            updateWater();
+        }
+    }
+
+    function resetWater() {
+        waterAmount = 0;
+        updateWater();
+    }
+
+    function updateWater() {
+        document.getElementById("waterAmount").textContent = waterAmount;
+        document.getElementById("summaryWater").textContent = waterAmount;
+
+        let percentage = (waterAmount / waterGoal) * 100;
+        const waterEl = document.getElementById("water");
+        const puddleEl = document.getElementById("puddle");
+        const progressEl = document.getElementById("waterProgress");
+
+        progressEl.style.width = Math.min(percentage, 100) + "%";
+
+        if (percentage > 100) {
+            waterEl.style.height = "100%";
+            let overflowAmount = percentage - 100;
+            let puddleWidth = Math.min(overflowAmount * 2, 220);
+            puddleEl.style.width = puddleWidth + "px";
+        } else {
+            waterEl.style.height = percentage + "%";
+            puddleEl.style.width = "0px";
+        }
+    }
+
+    let totalCalories = 0;
+    let totalActivities = 0;
+
+    function updateUnitLabel() {
+        const select = document.getElementById("activitySelect");
+        const selectedOption = select.options[select.selectedIndex];
+        const unit = selectedOption.getAttribute("data-unit");
+        document.getElementById("unitLabel").textContent = unit;
+    }
+
+    function calculateSelected() {
+        const select = document.getElementById("activitySelect");
+        const factor = Number(select.value);
+        const amountInput = document.getElementById("activityAmount");
+        const amount = Number(amountInput.value);
+        const weight = Number(document.getElementById("weight").value);
+
+        if (amount <= 0 || weight <= 0) {
+            alert("Por favor ingresa un valor válido.");
+            return;
+        }
+
+        totalCalories += (amount * weight * factor);
+        totalActivities++;
+
+        document.getElementById("calories").textContent = Math.round(totalCalories);
+        document.getElementById("activities").textContent = totalActivities;
+        amountInput.value = "";
+    }
+
+    function resetCalories() {
+        totalCalories = 0;
+        totalActivities = 0;
+        document.getElementById("calories").textContent = 0;
+        document.getElementById("activities").textContent = 0;
+    }
+
+    function saveData() {
+        localStorage.setItem("fitwater_water", waterAmount);
+        localStorage.setItem("fitwater_calories", totalCalories);
+        localStorage.setItem("fitwater_activities", totalActivities);
+    }
+    setInterval(saveData, 1000);
+
+    window.onload = function() {
+        const savedWater = localStorage.getItem("fitwater_water");
+        const savedCal = localStorage.getItem("fitwater_calories");
+        const savedAct = localStorage.getItem("fitwater_activities");
+
+        if (savedWater) { waterAmount = Number(savedWater); updateWater(); }
+        if (savedCal) { totalCalories = Number(savedCal); document.getElementById("calories").textContent = Math.round(totalCalories); }
+        if (savedAct) { totalActivities = Number(savedAct); document.getElementById("activities").textContent = totalActivities; }
+    };
+</script>
+
+</body>
+</html>
