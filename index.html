@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+  <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -79,27 +80,6 @@
       cursor: pointer;
     }
 
-    /* Peso Corporal */
-    .peso-box {
-      background-color: #ffffff;
-      padding: 12px 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border: 1px dashed #94a3b8;
-    }
-
-    .peso-box input {
-      padding: 6px;
-      width: 60px;
-      text-align: center;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-    }
-
     /* Selector de Actividades */
     .selector-actividad-box {
       background-color: #ffffff;
@@ -110,6 +90,7 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
+      margin-bottom: 15px;
     }
 
     .desplegable-select {
@@ -137,6 +118,26 @@
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       text-align: center;
+    }
+
+    /* Peso Corporal (Ahora ubicado justo abajo) */
+    .peso-box {
+      background-color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px dashed #94a3b8;
+    }
+
+    .peso-box input {
+      padding: 6px;
+      width: 60px;
+      text-align: center;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
     }
 
     /* Sección Agua */
@@ -244,7 +245,7 @@
 
     .consultas-lista {
       font-size: 12px;
-      max-height: 35px;
+      max-height: 40px;
       overflow-y: auto;
       margin-top: 2px;
     }
@@ -263,13 +264,6 @@
     <div class="card">
       <h2>Calculadora de Actividad Física</h2>
       
-      <div class="peso-box">
-        <label for="peso">Peso Corporal de Referencia:</label>
-        <input type="number" id="peso" value="70">
-        <span>kg</span>
-        <button class="btn-blue" onclick="determinarCalorias()">Determinar Calorías</button>
-      </div>
-
       <!-- Menú desplegable para elegir la actividad -->
       <div class="selector-actividad-box">
         <label for="selectActividades">Selecciona una actividad:</label>
@@ -282,6 +276,14 @@
           <span id="unidadTexto">min/reps</span>
           <button class="btn-blue" onclick="agregarActividadSeleccionada()">Elegir Actividad</button>
         </div>
+      </div>
+
+      <!-- Determinar Calorías y Peso Corporal (Ubicado justo abajo) -->
+      <div class="peso-box">
+        <label for="peso">Peso Corporal de Referencia:</label>
+        <input type="number" id="peso" value="70">
+        <span>kg</span>
+        <button class="btn-blue" onclick="determinarCalorias()">Determinar Calorías</button>
       </div>
     </div>
 
@@ -363,7 +365,6 @@
     let capacidadMax = 2000;
     let mlActuales = 0;
 
-    // Cargar opciones en el botón desplegable
     const select = document.getElementById('selectActividades');
     actividades.forEach(act => {
       const option = document.createElement('option');
@@ -378,7 +379,6 @@
       document.getElementById('unidadTexto').innerText = act.unidad;
     }
 
-    // Inicializar la primera etiqueta de unidad
     cambiarUnidadEtiqueta();
 
     function agregarActividadSeleccionada() {
@@ -389,6 +389,7 @@
       if (cantidad > 0) {
         const calCalculadas = Math.round(cantidad * act.calPorUnidad);
         totalCalorias += calCalculadas;
+        // Guarda la actividad con el tiempo/reps exacto seleccionado
         consultas.push(`${act.nombre} (${cantidad} ${act.unidad} = ${calCalculadas} kcal)`);
         actualizarResultados();
       }
@@ -404,7 +405,7 @@
     function actualizarResultados() {
       document.getElementById('totalCalorias').innerText = totalCalorias + " kcal";
       const lista = document.getElementById('listaConsultas');
-      lista.innerHTML = consultas.length ? consultas.join(', ') : 'Ninguna';
+      lista.innerHTML = consultas.length ? consultas.join(' | ') : 'Ninguna';
     }
 
     function cambiarBotella(cap) {
